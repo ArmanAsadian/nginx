@@ -28,7 +28,7 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - path: nginx-base
+          - path: nginx-core
           - path: nginx-pwa
           - path: nginx-ws
 
@@ -41,31 +41,21 @@ jobs:
       - name: ⤵️ Checkout repository
         uses: actions/checkout@v4.1.1
 
-      - name: ❔ Check Container files changed
-        id: file_change
-        uses: dorny/paths-filter@v2.11.1
-        with:
-          filters: |
-            container_folder:
-              ./${{ matrix.path }}/*
-
       - name: 🏗 Install cosign
-        if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder == 'true' }}
+        if: ${{ github.event_name != 'pull_request' }}
         uses: sigstore/cosign-installer@v3.1.2
 
       - name: 🏗 Setup Docker Buildx
-        if: ${{ steps.file_change.outputs.container_folder == 'true' }}
         uses: docker/setup-buildx-action@v3.0.0
 
       - name: 🏗 Cache Docker Layers
-        if: ${{ steps.file_change.outputs.container_folder == 'true' }}
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
           key: alwatr-${{ matrix.path }}
 
       - name: 🏗 Log into registry ${{env.REGISTRY}}
-        if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder == 'true' }}
+        if: ${{ github.event_name != 'pull_request' }}
         uses: docker/login-action@v3.0.0
         with:
           registry: ${{env.REGISTRY}}
@@ -85,7 +75,6 @@ jobs:
             type=ref,enable=true,event=branch
 
       - name: 🚀 Build and push container image
-        if: ${{ steps.file_change.outputs.container_folder == 'true' }}
         id: build_and_push
         uses: docker/build-push-action@v5.0.0
         with:
@@ -99,7 +88,7 @@ jobs:
             BUILD_REV=${{github.sha}}
 
       - name: 🏗 Sign the image with GitHub OIDC Token
-        if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder == 'true' }}
+        if: ${{ github.event_name != 'pull_request' }}
         env:
           COSIGN_EXPERIMENTAL: 'true'
         run: echo "${{steps.meta.outputs.tags}}" | xargs -I {} cosign sign --yes {}@${{steps.build_and_push.outputs.digest}}
