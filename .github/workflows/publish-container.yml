@@ -7,7 +7,9 @@ on:
 
   push:
     branches:
-      - main
+      - next
+    tags:
+      - v*
 
   pull_request:
 
@@ -23,17 +25,12 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
-          - name: nginx
-            path: nginx
-
-          - name: nginx-pwa
-            path: nginx-pwa
-
-          - name: nginx-ws
-            path: nginx-ws
+          - path: nginx-base
+          - path: nginx-pwa
+          - path: nginx-ws
 
     permissions:
       contents: read
@@ -42,7 +39,7 @@ jobs:
 
     steps:
       - name: ⤵️ Checkout repository
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
 
       - name: ❔ Check Container files changed
         id: file_change
@@ -51,17 +48,6 @@ jobs:
           filters: |
             container_folder:
               ./${{ matrix.path }}/*
-
-      - name: 🏗 Extract version from dockerfile
-        if: ${{ steps.file_change.outputs.container_folder == 'true' }}
-        id: version
-        run: |
-          version_full=$(grep 'cloud.alwatr.image.version.full' ./${{ matrix.path }}/Dockerfile | cut -d'"' -f2)
-          version_short=$(grep 'cloud.alwatr.image.version.short' ./${{ matrix.path }}/Dockerfile | cut -d'"' -f2)
-          echo "version_full=$version_full" >> $GITHUB_OUTPUT
-          echo "version_short=$version_short" >> $GITHUB_OUTPUT
-          echo "version_full: $version_full"
-          echo "version_short: $version_short"
 
       - name: 🏗 Install cosign
         if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder == 'true' }}
@@ -76,7 +62,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: container-${{ matrix.name }}
+          key: alwatr-${{ matrix.path }}
 
       - name: 🏗 Log into registry ${{env.REGISTRY}}
         if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder == 'true' }}
@@ -86,16 +72,26 @@ jobs:
           username: ${{github.repository_owner}}
           password: ${{secrets.GITHUB_TOKEN}}
 
+      - name: 🏗 Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5.0.0
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          images: name=${{env.REGISTRY}}/${{env.USER}}/${{matrix.path}},enable=true
+          tags: |
+            type=semver,enable=true,pattern={{major}}
+            type=semver,enable=true,pattern={{major}}.{{minor}}
+            type=semver,enable=true,pattern={{version}}
+            type=ref,enable=true,event=branch
+
       - name: 🚀 Build and push container image
         if: ${{ steps.file_change.outputs.container_folder == 'true' }}
         id: build_and_push
         uses: docker/build-push-action@v5.0.0
         with:
           context: ./${{matrix.path}}
-          push: ${{github.event_name != 'pull_request'}}
-          tags: |
-            ${{env.REGISTRY}}/${{env.USER}}/${{matrix.name}}:${{steps.version.outputs.version_full}}
-            ${{env.REGISTRY}}/${{env.USER}}/${{matrix.name}}:${{steps.version.outputs.version_short}}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{steps.meta.outputs.tags}}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           build-args: |
@@ -106,6 +102,4 @@ jobs:
         if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder == 'true' }}
         env:
           COSIGN_EXPERIMENTAL: 'true'
-        run: |
-          cosign sign --yes "${{env.REGISTRY}}/${{env.USER}}/${{matrix.name}}:${{steps.version.outputs.version_full}}@${{steps.build_and_push.outputs.digest}}"
-          cosign sign --yes "${{env.REGISTRY}}/${{env.USER}}/${{matrix.name}}:${{steps.version.outputs.version_short}}@${{steps.build_and_push.outputs.digest}}"
+        run: echo "${{steps.meta.outputs.tags}}" | xargs -I {} cosign sign --yes {}@${{steps.build_and_push.outputs.digest}}

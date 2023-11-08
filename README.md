@@ -1,6 +1,6 @@
 # Alwatr Accelerated Web Server
 
-High performance Accelerated NGINX optimized for serve static content like CDN.
+High-performance, accelerated NGINX, optimized for serving static content. Enhanced and accelerated by Alwatr.
 
 ## Usage
 

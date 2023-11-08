@@ -1,5 +1,12 @@
-ARG NGINX_IMAGE=docker.io/library/nginx:1.25-alpine
-FROM $NGINX_IMAGE
+FROM docker.io/library/nginx:1.25.3-alpine3.18
+
+RUN apk add --no-cache curl
+HEALTHCHECK --interval=30s --timeout=3s --start-period=1s --retries=3 CMD curl -fso /dev/null http://localhost/server-info || exit 1
+
+RUN rm -rfv /etc/nginx/conf.d/*
+COPY conf/ /etc/nginx/
+COPY www/  /var/www/
+RUN chmod a+rx /etc/nginx/entrypoint.sh /etc/nginx/entrypoint.d/*.sh
 
 # Default environment for nginx template
 # ENV NGINX_ACCESS_LOG="/var/log/nginx/access.log json"
@@ -30,15 +37,23 @@ ENV NGINX_ACCESS_LOG=off \
     NGINX_ENTRYPOINT_WORKER_PROCESSES_AUTOTUNE=1 \
     NGINX_ENTRYPOINT_QUIET_LOGS=""
 
-RUN apk add --no-cache curl
-HEALTHCHECK --interval=30s --timeout=3s --start-period=1s --retries=3 CMD curl -fso /dev/null http://localhost/server-info || exit 1
-
-RUN rm -rfv /etc/nginx/conf.d/*
-COPY conf/ /etc/nginx/
-COPY www/  /var/www/
-RUN chmod a+rx /etc/nginx/entrypoint.sh /etc/nginx/entrypoint.d/*.sh
-
 EXPOSE 80
 WORKDIR /var/www/html/
 ENTRYPOINT ["/etc/nginx/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
+
+ARG BUILD_REV
+ARG BUILD_DATE
+LABEL org.opencontainers.image.title="alwatr/nginx" \
+      org.opencontainers.image.description="High-performance, accelerated NGINX, optimized for serving static content. Enhanced and accelerated by Alwatr." \
+      org.opencontainers.image.base.name="docker.io/library/nginx:1.25.3-alpine3.18" \
+      org.opencontainers.image.version="1.25.3" \
+      org.opencontainers.image.ref.name="1.25.3-alpine3.18" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.created=${BUILD_DATE} \
+      org.opencontainers.image.revision=${BUILD_REV} \
+      org.opencontainers.image.vendor="Alwatr" \
+      org.opencontainers.image.source="https://github.com/Alwatr/nginx" \
+      org.opencontainers.image.url="https://github.com/Alwatr/nginx" \
+      org.opencontainers.image.documentation="https://github.com/Alwatr/nginx" \
+      org.opencontainers.image.authors="S. Ali Mihandoost <ali.mihandoost@gmail.com> (https://ali.mihandoost.com), S. Amir Mohammad Najafi <njfamirm@gmail.com> (https://njfamirm.ir/)"
