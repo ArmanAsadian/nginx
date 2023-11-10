@@ -19,7 +19,7 @@ updates:
           - '*'
 
   - package-ecosystem: docker
-    directory: /**/Dockerfile
+    directory: /*/
     open-pull-requests-limit: 20
     reviewers:
       - AliMD
