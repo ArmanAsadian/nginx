@@ -16,8 +16,8 @@ ARG BUILD_DATE
 LABEL org.opencontainers.image.title="alwatr/nginx" \
       org.opencontainers.image.description="NGINX web server slim (light), packaged by Alwatr." \
       org.opencontainers.image.base.name="docker.io/library/nginx:1.25.3-alpine3.18-slim" \
-      org.opencontainers.image.version="1.1.0-n1.25.3" \
-      org.opencontainers.image.ref.name="1.1.0-n1.25.3-a3.18-slim" \
+      org.opencontainers.image.version="1.1.1-n1.25.3" \
+      org.opencontainers.image.ref.name="1.1.1-n1.25.3-a3.18-slim" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.revision=${BUILD_REV} \

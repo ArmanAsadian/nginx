@@ -1,4 +1,4 @@
-FROM ghcr.io/alwatr/nginx-core:1.1.0
+FROM ghcr.io/alwatr/nginx-core:1.1.1
 
 # Default environment for nginx template
 ENV NGINX_CLIENT_MAX_BODY_SIZE=1k \
@@ -21,9 +21,9 @@ ARG BUILD_REV
 ARG BUILD_DATE
 LABEL org.opencontainers.image.title="alwatr/nginx-cdn" \
       org.opencontainers.image.description="High-performance, accelerated NGINX, optimized for CDN. Enhanced and accelerated by Alwatr." \
-      org.opencontainers.image.base.name="ghcr.io/alwatr/nginx-core:1.1.0" \
-      org.opencontainers.image.version="1.1.0" \
-      org.opencontainers.image.ref.name="1.1.0-n1.25.3-a3.18-slim" \
+      org.opencontainers.image.base.name="ghcr.io/alwatr/nginx-core:1.1.1" \
+      org.opencontainers.image.version="1.1.1" \
+      org.opencontainers.image.ref.name="1.1.1-n1.25.3-a3.18-slim" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.revision=${BUILD_REV} \
