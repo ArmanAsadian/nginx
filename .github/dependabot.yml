@@ -19,7 +19,7 @@ updates:
           - '*'
 
   - package-ecosystem: docker
-    directory: /nginx-core
+    directory: /nginx
     reviewers:
       - AliMD
     schedule:
