@@ -19,8 +19,7 @@ updates:
           - '*'
 
   - package-ecosystem: docker
-    directory: /*/
-    open-pull-requests-limit: 20
+    directory: /nginx-core
     reviewers:
       - AliMD
     schedule:
@@ -29,7 +28,25 @@ updates:
       - ci
       - priority-low
       - maintenance
-    # groups:
-    #   github-actions:
-    #     patterns:
-    #       - '*'
+
+  - package-ecosystem: docker
+    directory: /nginx-pwa
+    reviewers:
+      - AliMD
+    schedule:
+      interval: daily
+    labels:
+      - ci
+      - priority-low
+      - maintenance
+
+  - package-ecosystem: docker
+    directory: /nginx-ws
+    reviewers:
+      - AliMD
+    schedule:
+      interval: daily
+    labels:
+      - ci
+      - priority-low
+      - maintenance
