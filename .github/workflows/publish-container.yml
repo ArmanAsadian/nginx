@@ -8,10 +8,12 @@ on:
   push:
     branches:
       - next
-    tags:
-      - v*
 
   pull_request:
+
+  release:
+    types:
+      - created
 
 env:
   REGISTRY: ghcr.io
@@ -46,6 +48,7 @@ jobs:
 
       - name: ❔ Check Container files changed
         id: file_change
+        if: ${{ github.event_name != 'release' }}
         uses: dorny/paths-filter@v2.11.1
         with:
           filters: |
