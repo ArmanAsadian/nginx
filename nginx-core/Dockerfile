@@ -1,16 +1,14 @@
-FROM docker.io/library/nginx:1.25.3-alpine3.18
+FROM ghcr.io/alwatr/nginx:1.1.0
 
 RUN apk add --no-cache curl
 HEALTHCHECK --interval=30s --timeout=3s --start-period=1s --retries=3 CMD curl -fso /dev/null http://localhost/server-info || exit 1
 
-RUN rm -rfv /etc/nginx/conf.d/*
-COPY conf/ /etc/nginx/
-COPY www/  /var/www/
-RUN chmod a+rx /etc/nginx/entrypoint.sh /etc/nginx/entrypoint.d/*.sh
+COPY etc/nginx/ /etc/nginx/
+COPY var/www/ /var/www/
+RUN ls -RlAhF /etc/nginx/
 
 # Default environment for nginx template
-# ENV NGINX_ACCESS_LOG="/var/log/nginx/access.log json"
-ENV NGINX_ACCESS_LOG=off \
+ENV NGINX_ACCESS_LOG="/var/log/nginx/access.log json" \
     NGINX_ERROR_LOG_LEVEL=notice \
     NGINX_WORKER_CONNECTIONS=2048 \
     NGINX_CLIENT_MAX_BODY_SIZE=10m \
@@ -37,18 +35,13 @@ ENV NGINX_ACCESS_LOG=off \
     NGINX_ENTRYPOINT_WORKER_PROCESSES_AUTOTUNE=1 \
     NGINX_ENTRYPOINT_QUIET_LOGS=""
 
-EXPOSE 80
-WORKDIR /var/www/html/
-ENTRYPOINT ["/etc/nginx/entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
-
 ARG BUILD_REV
 ARG BUILD_DATE
 LABEL org.opencontainers.image.title="alwatr/nginx-core" \
       org.opencontainers.image.description="High-performance, accelerated NGINX, optimized for serving static content. Enhanced and accelerated by Alwatr." \
-      org.opencontainers.image.base.name="docker.io/library/nginx:1.25.3-alpine3.18" \
-      org.opencontainers.image.version="1.0.0" \
-      org.opencontainers.image.ref.name="1.0.0-nginx1.25.3-alpine" \
+      org.opencontainers.image.base.name="ghcr.io/alwatr/nginx:1.1.0" \
+      org.opencontainers.image.version="1.1.0-n1.25.3" \
+      org.opencontainers.image.ref.name="1.1.0-n1.25.3-a3.18-slim" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.revision=${BUILD_REV} \

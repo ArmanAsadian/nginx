@@ -3,8 +3,7 @@ FROM docker.io/library/nginx:1.25.3-alpine3.18-slim
 RUN rm -rfv /docker-entrypoint* /etc/nginx/conf.d/* /etc/nginx/nginx.conf /var/www/html /usr/share/nginx/html
 COPY etc/nginx/ /etc/nginx/
 RUN chmod a+rx /etc/nginx/entrypoint.sh /etc/nginx/entrypoint.d/*.sh
-RUN ls -lAhF /etc/nginx/
-# COPY www/ /var/www/
+RUN ls -RlAhF /etc/nginx/
 
 EXPOSE 80
 STOPSIGNAL SIGQUIT
@@ -17,8 +16,8 @@ ARG BUILD_DATE
 LABEL org.opencontainers.image.title="alwatr/nginx" \
       org.opencontainers.image.description="NGINX web server slim (light), packaged by Alwatr." \
       org.opencontainers.image.base.name="docker.io/library/nginx:1.25.3-alpine3.18-slim" \
-      org.opencontainers.image.version="1.0.0-n1.25.3" \
-      org.opencontainers.image.ref.name="1.0.0-n1.25.3-a3.18-slim" \
+      org.opencontainers.image.version="1.1.0-n1.25.3" \
+      org.opencontainers.image.ref.name="1.1.0-n1.25.3-a3.18-slim" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.revision=${BUILD_REV} \
