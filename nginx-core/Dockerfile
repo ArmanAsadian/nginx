@@ -1,4 +1,4 @@
-FROM docker.io/library/nginx:1.25.3-alpine3.18
+FROM docker.io/library/nginx:1.25.2-alpine3.18
 
 RUN apk add --no-cache curl
 HEALTHCHECK --interval=30s --timeout=3s --start-period=1s --retries=3 CMD curl -fso /dev/null http://localhost/server-info || exit 1
