@@ -1,0 +1,2 @@
+# /etc/nginx/conf.d/redirect.map
+/example1 /redirected-example;
