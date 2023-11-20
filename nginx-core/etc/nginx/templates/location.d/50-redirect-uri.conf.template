@@ -1,5 +1,3 @@
-location / {
-  if ($redirect_uri) {
-    return 302 $redirect_uri;
-  }
+if ($redirect_uri) {
+  return $NGINX_FORCE_REDIRECT_STATUS $redirect_uri;
 }
