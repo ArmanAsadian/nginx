@@ -1,0 +1,3 @@
+if ($redirect_uri) {
+  return $NGINX_FORCE_REDIRECT_STATUS $redirect_uri;
+}
