@@ -1,5 +1,3 @@
-location / {
-  if ($host != $NGINX_FORCE_DOMAIN) {
-    return $NGINX_FORCE_DOMAIN_STATUS $scheme://$NGINX_FORCE_DOMAIN$request_uri;
-  }
+if ($host != $NGINX_FORCE_DOMAIN) {
+  return $NGINX_FORCE_DOMAIN_STATUS $scheme://$NGINX_FORCE_DOMAIN$request_uri;
 }
