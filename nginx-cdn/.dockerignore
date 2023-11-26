@@ -1,3 +1,4 @@
 *
 !etc/nginx/
-!var/www/
+!data/
+
