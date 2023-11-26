@@ -5,7 +5,6 @@ COPY etc/nginx/ /etc/nginx/
 COPY data/ .
 RUN ls -RlahF /etc/nginx /data
 
-# Default environment for nginx template
 ENV NGINX_CLIENT_MAX_BODY_SIZE=1k \
     NGINX_SENDFILE=on \
     NGINX_SENDFILE_MAX_CHUNK=2m \
@@ -24,7 +23,7 @@ ENV NGINX_CLIENT_MAX_BODY_SIZE=1k \
 
 ARG BUILD_REV
 ARG BUILD_DATE
-LABEL org.opencontainers.image.title="alwatr/nginx-ws" \
+LABEL org.opencontainers.image.title="alwatr/nginx-json" \
       org.opencontainers.image.description="This is a high-performance version of NGINX, which has been enhanced by Alwatr for the purpose of serving JSON content efficiently." \
       org.opencontainers.image.base.name="ghcr.io/alwatr/nginx-core:2.0.0" \
       org.opencontainers.image.version="2.0.0" \
