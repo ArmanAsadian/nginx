@@ -1,11 +1,13 @@
-FROM ghcr.io/alwatr/nginx:1.1.1
+FROM ghcr.io/alwatr/nginx:2.0.0
 
 RUN apk add --no-cache curl
 HEALTHCHECK --interval=30s --timeout=3s --start-period=1s --retries=3 CMD curl -fso /dev/null http://localhost/server-info || exit 1
 
+WORKDIR /data
+
 COPY etc/nginx/ /etc/nginx/
-COPY var/www/ /var/www/
-RUN ls -RlAhF /etc/nginx/
+COPY data/ .
+RUN ls -RlahF /etc/nginx /data
 
 # Default environment for nginx template
 ENV NGINX_ACCESS_LOG="/var/log/nginx/access.log json" \
@@ -14,7 +16,7 @@ ENV NGINX_ACCESS_LOG="/var/log/nginx/access.log json" \
     NGINX_LIMIT_REQ_ERROR=503 \
     NGINX_LIMIT_REQ_LOG=notice \
     NGINX_AUTOINDEX=off \
-    NGINX_DOCUMENT_ROOT=/var/www/html \
+    NGINX_DOCUMENT_ROOT=/data \
     NGINX_FORCE_DOMAIN="" \
     NGINX_FORCE_DOMAIN_STATUS=302 \
     NGINX_FORCE_REDIRECT_STATUS=302 \
@@ -40,10 +42,10 @@ ENV NGINX_CLIENT_MAX_BODY_SIZE=10m \
 ARG BUILD_REV
 ARG BUILD_DATE
 LABEL org.opencontainers.image.title="alwatr/nginx-core" \
-      org.opencontainers.image.description="High-performance, accelerated NGINX, optimized for serving static content. Enhanced and accelerated by Alwatr." \
-      org.opencontainers.image.base.name="ghcr.io/alwatr/nginx:1.1.1" \
-      org.opencontainers.image.version="1.1.1-n1.25.3" \
-      org.opencontainers.image.ref.name="1.1.1-n1.25.3-a3.18-slim" \
+      org.opencontainers.image.description="HThis is a high-performance version of NGINX, which has been enhanced by Alwatr for the purpose of serving static content efficiently." \
+      org.opencontainers.image.base.name="ghcr.io/alwatr/nginx:2.0.0" \
+      org.opencontainers.image.version="2.0.0-nginx1.25.3" \
+      org.opencontainers.image.ref.name="2.0.0-nginx1.25.3-alpine3.18-slim" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.revision=${BUILD_REV} \
