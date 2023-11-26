@@ -32,7 +32,3 @@ location ~ /\. {
   deny all;
   access_log off; log_not_found off;
 }
-
-# if ($request_method !~ ^(GET|HEAD|POST)$ ) {
-#     return 405;
-# }
