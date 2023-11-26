@@ -1,7 +1,8 @@
 FROM ghcr.io/alwatr/nginx-core:1.1.1
 
 COPY etc/nginx/ /etc/nginx/
-RUN ls -RlAhF /etc/nginx/
+# COPY data/ .
+RUN ls -RlahF /etc/nginx /data
 
 # Default environment for nginx template
 ENV NGINX_CLIENT_MAX_BODY_SIZE=1k \
@@ -23,10 +24,10 @@ ENV NGINX_CLIENT_MAX_BODY_SIZE=1k \
 ARG BUILD_REV
 ARG BUILD_DATE
 LABEL org.opencontainers.image.title="alwatr/nginx-pwa" \
-      org.opencontainers.image.description="High-performance, accelerated NGINX, optimized for serving progressive web applications. Enhanced and accelerated by Alwatr." \
+      org.opencontainers.image.description="This is a high-performance version of NGINX, which has been enhanced by Alwatr for the purpose of serving PWA efficiently." \
       org.opencontainers.image.base.name="ghcr.io/alwatr/nginx-core:1.1.1" \
       org.opencontainers.image.version="1.1.1" \
-      org.opencontainers.image.ref.name="1.1.1-n1.25.3-a3.18-slim" \
+      org.opencontainers.image.ref.name="2.0.0-nginx1.25.3-alpine3.18-slim" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.revision=${BUILD_REV} \
