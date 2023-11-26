@@ -1,18 +1,16 @@
 # Alwatr Accelerated Web Server
 
-High-performance, accelerated NGINX, optimized for serving static content. Enhanced and accelerated by Alwatr.
+This is a high-performance version of NGINX, which has been enhanced by Alwatr for the purpose of serving static content efficiently.
 
 ## Usage
 
-The right way of using the alwatr nginx is behind kubernetes ingress or simple edge reverse-proxy, then don't config edge stuff like gzip compression, ssl, etc or even config domain or multiple websites.
+The recommended method for using the Alwatr Nginx is to place it behind a Kubernetes ingress or a simple edge reverse-proxy like Traefik. In this setup, there's no need to configure edge features such as gzip compression, SSL, etc., or even set up a domain or multiple websites.
 
 ```Dockerfile
 FROM ghcr.io/alwatr/nginx:1
 ```
 
-### Serve Progressive Web App
-
-The right way of using the alwatr nginx is behind kubernetes ingress or simple edge reverse-proxy, then don't config edge stuff like gzip compression, ssl, etc or even config domain or multiple websites.
+### Serve Progressive Web Apps
 
 ```Dockerfile
 ARG NODE_VERSION=lts

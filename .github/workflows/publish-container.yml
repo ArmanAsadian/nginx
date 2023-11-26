@@ -16,7 +16,6 @@ on:
       - created
 
 env:
-  REGISTRY: ghcr.io
   USER: alwatr
 
 jobs:
@@ -36,6 +35,7 @@ jobs:
           - path: nginx-cdn
           - path: nginx-pwa
           - path: nginx-ws
+          - path: nginx-json
 
     permissions:
       contents: read
@@ -68,14 +68,21 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: alwatr-${{ matrix.path }}
+          key: container/${{ matrix.path }}
 
-      - name: 🏗 Log into registry ${{env.REGISTRY}}
+      - name: 🏗 Log into docker hub registry
         if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder != 'false' }}
         uses: docker/login-action@v3.0.0
         with:
-          registry: ${{env.REGISTRY}}
-          username: ${{github.repository_owner}}
+          username: ${{env.USER}}
+          password: ${{secrets.DOCKER_HUB_TOKEN}}
+
+      - name: 🏗 Log into ghcr.io registry
+        if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder != 'false' }}
+        uses: docker/login-action@v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{env.USER}}
           password: ${{secrets.GITHUB_TOKEN}}
 
       - name: 🏗 Extract metadata
@@ -84,7 +91,9 @@ jobs:
         uses: docker/metadata-action@v5.0.0
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          images: name=${{env.REGISTRY}}/${{env.USER}}/${{matrix.path}},enable=true
+          images: |
+            name=ghcr.io/${{env.USER}}/${{matrix.path}},enable=true
+            name=docker.io/${{env.USER}}/${{matrix.path}},enable=true
           tags: |
             type=semver,enable=true,pattern={{major}}
             type=semver,enable=true,pattern={{major}}.{{minor}}
@@ -105,8 +114,8 @@ jobs:
             BUILD_DATE=${{github.event.repository.updated_at}}
             BUILD_REV=${{github.sha}}
 
-      - name: 🏗 Sign the image with GitHub OIDC Token
-        if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder != 'false' }}
-        env:
-          COSIGN_EXPERIMENTAL: 'true'
-        run: echo "${{steps.meta.outputs.tags}}" | xargs -I {} cosign sign --yes {}@${{steps.build_and_push.outputs.digest}}
+      # - name: 🏗 Sign the image with GitHub OIDC Token
+      #   if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder != 'false' }}
+      #   env:
+      #     COSIGN_EXPERIMENTAL: 'true'
+      #   run: echo "${{steps.meta.outputs.tags}}" | xargs -I {} cosign sign --yes {}@${{steps.build_and_push.outputs.digest}}
