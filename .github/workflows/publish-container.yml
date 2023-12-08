@@ -53,7 +53,7 @@ jobs:
         with:
           filters: |
             container_folder:
-              ./${{ matrix.path }}/*
+              ./${{ matrix.path }}/**
 
       - name: 🏗 Install cosign
         if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder != 'false' }}
@@ -65,7 +65,7 @@ jobs:
 
       - name: 🏗 Cache Docker Layers
         if: ${{ steps.file_change.outputs.container_folder != 'false' }}
-        uses: actions/cache@v3
+        uses: actions/cache@v3.3.2
         with:
           path: /tmp/.buildx-cache
           key: container/${{ matrix.path }}
