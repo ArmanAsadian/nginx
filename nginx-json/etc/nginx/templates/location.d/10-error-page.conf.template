@@ -4,5 +4,5 @@ location = /_error.json {
   internal;
   auth_basic off;
   default_type application/json;
-  return $status '{"ok": false, "statusCode": $status, "errorCode": "serve_error", "meta": {"server": "alwatr", "status": "$status_text"}}';
+  return 200 '{"ok": false, "statusCode": $status, "errorCode": "serve_error", "meta": {"server": "alwatr", "status": "$status_text"}}';
 }
