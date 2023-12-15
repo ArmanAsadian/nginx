@@ -1,8 +1,8 @@
 FROM ghcr.io/alwatr/nginx-core:2.1.1
 
-RUN rm -fv index.html _error.html
+RUN rm -fv /default-data
 COPY etc/nginx/ /etc/nginx/
-# COPY data/ .
+COPY default-data/ /default-data/
 RUN ls -RlahF /etc/nginx /data
 
 ENV NGINX_CLIENT_MAX_BODY_SIZE=1k \

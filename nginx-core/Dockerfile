@@ -6,7 +6,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=1s --retries=3 CMD curl -
 WORKDIR /data
 
 COPY etc/nginx/ /etc/nginx/
-COPY data/ .
+COPY default-data/ /default-data/
 RUN ls -RlahF /etc/nginx /data
 
 # Default environment for nginx template
@@ -42,7 +42,7 @@ ENV NGINX_CLIENT_MAX_BODY_SIZE=10m \
 ARG BUILD_REV
 ARG BUILD_DATE
 LABEL org.opencontainers.image.title="alwatr/nginx-core" \
-      org.opencontainers.image.description="HThis is a high-performance version of NGINX, which has been enhanced by Alwatr for the purpose of serving static content efficiently." \
+      org.opencontainers.image.description="This is a high-performance version of NGINX, which has been enhanced by Alwatr for the purpose of serving static content efficiently." \
       org.opencontainers.image.base.name="ghcr.io/alwatr/nginx:2.1.1" \
       org.opencontainers.image.version="2.1.1-nginx1.25.3" \
       org.opencontainers.image.ref.name="2.1.1-nginx1.25.3-alpine3.18-slim" \
