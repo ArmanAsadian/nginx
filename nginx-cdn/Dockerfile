@@ -1,7 +1,7 @@
 FROM ghcr.io/alwatr/nginx-core:2.1.1
 
 # COPY etc/nginx/ /etc/nginx/
-# COPY data/ .
+# COPY default-data/ /default-data/
 # RUN ls -RlahF /etc/nginx /data
 
 # Default environment for nginx template

@@ -1,4 +1,4 @@
 *
 !etc/nginx/
-!data/
+!default-data/
 
