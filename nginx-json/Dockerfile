@@ -1,7 +1,7 @@
 FROM ghcr.io/alwatr/nginx-core:2.2.1
 
-RUN rm -rfv /default-data
 COPY etc/nginx/ /etc/nginx/
+RUN set -eux; rm -rfv /default-data
 COPY default-data/ /default-data/
 # RUN ls -RlahF /etc/nginx /default-data /data
 
