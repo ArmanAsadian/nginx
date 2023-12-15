@@ -2,7 +2,7 @@ FROM ghcr.io/alwatr/nginx-core:2.2.1
 
 # COPY etc/nginx/ /etc/nginx/
 # COPY default-data/ /default-data/
-# RUN ls -RlahF /etc/nginx /data
+# RUN ls -RlahF /etc/nginx /default-data /data
 
 # Default environment for nginx template
 ENV NGINX_CLIENT_MAX_BODY_SIZE=1k \

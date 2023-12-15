@@ -7,7 +7,7 @@ WORKDIR /data
 
 COPY etc/nginx/ /etc/nginx/
 COPY default-data/ /default-data/
-RUN ls -RlahF /etc/nginx /data
+# RUN ls -RlahF /etc/nginx /default-data /data
 
 # Default environment for nginx template
 ENV NGINX_ACCESS_LOG="/var/log/nginx/access.log json" \
