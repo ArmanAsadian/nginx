@@ -1,7 +1,9 @@
 #!/bin/sh
 set -e
 
-# copy without overwriting existing files
-cp -anv /default-data/ /data/
+if [ -d "/default-data" ]; then
+  # copy without overwriting existing files
+  cp -anv /default-data/* /data/
+fi
 
 exit 0
