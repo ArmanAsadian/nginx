@@ -1,5 +1,4 @@
-add_header  Server Alwatr;
-add_header  X-Server Alwatr;
+add_header  Server AlwatrWebServer;
 add_header  X-Frame-Options SAMEORIGIN;
 add_header  X-Content-Type-Options nosniff;
 add_header  X-XSS-Protection "1; mode=block";
