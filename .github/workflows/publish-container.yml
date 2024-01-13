@@ -100,9 +100,28 @@ jobs:
             type=semver,enable=true,pattern={{version}}
             type=ref,enable=true,event=branch
 
-      - name: 🚀 Build and push container image
+      - name: 🚀 Build and export to docekr
         if: ${{ steps.file_change.outputs.container_folder != 'false' }}
-        id: build_and_push
+        uses: docker/build-push-action@v5.1.0
+        with:
+          context: ./${{matrix.path}}
+          push: false
+          load: true
+          tags: ${{env.USER}}/${{matrix.path}}:test
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          build-args: |
+            BUILD_DATE=${{github.event.repository.updated_at}}
+            BUILD_REV=${{github.sha}}
+
+      - name: 🧪 Run tests
+        if: ${{ steps.file_change.outputs.container_folder != 'false' }}
+        run: |
+          echo "Running tests for ${{matrix.path}}"
+          docker run --rm ${{env.USER}}/${{matrix.path}}:test /bin/sh -c "/etc/nginx/entrypoint.sh && nginx -t"
+
+      - name: 🚀 Build and publish container image
+        if: ${{ steps.file_change.outputs.container_folder != 'false' }}
         uses: docker/build-push-action@v5.1.0
         with:
           context: ./${{matrix.path}}
@@ -113,9 +132,3 @@ jobs:
           build-args: |
             BUILD_DATE=${{github.event.repository.updated_at}}
             BUILD_REV=${{github.sha}}
-
-      # - name: 🏗 Sign the image with GitHub OIDC Token
-      #   if: ${{ github.event_name != 'pull_request' && steps.file_change.outputs.container_folder != 'false' }}
-      #   env:
-      #     COSIGN_EXPERIMENTAL: 'true'
-      #   run: echo "${{steps.meta.outputs.tags}}" | xargs -I {} cosign sign --yes {}@${{steps.build_and_push.outputs.digest}}
