@@ -4,7 +4,8 @@ This is a high-performance version of NGINX, which has been enhanced by Alwatr f
 
 ## Usage
 
-The recommended method for using the Alwatr Nginx is to place it behind a Kubernetes ingress or a simple edge reverse-proxy like Traefik. In this setup, there's no need to configure edge features such as gzip compression, SSL, etc., or even set up a domain or multiple websites.
+The recommended method for using the Alwatr Nginx is to place it behind a Kubernetes ingress or a simple edge reverse-proxy like Traefik.  
+In this setup, there's no need to configure edge features such as SSL, Domain, etc. in the Alwatr Nginx.
 
 ```Dockerfile
 FROM ghcr.io/alwatr/nginx:2
