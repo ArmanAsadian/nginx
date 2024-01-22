@@ -1,13 +1,12 @@
 #!/bin/sh
 set -eu
 
-# Remove some configs base on envs
-cleanup_confings() {
-  if [ -z ${NGINX_FORCE_DOMAIN:-} ]; then
-    rm -fv /etc/nginx/conf.d/location.d/40-force-domain.conf
-  fi
-}
+ME=$(basename "$0")
 
-cleanup_confings
+# Remove some configs base on envs
+if [ -z ${NGINX_FORCE_DOMAIN:-} ]; then
+  echo "$ME: Remove force domain location config"
+  rm -fv /etc/nginx/conf.d/location.d/40-force-domain.conf
+fi
 
 exit 0
