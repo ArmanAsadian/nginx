@@ -6,7 +6,7 @@ set -e
 ME=$(basename $0)
 
 test -z "$NGINX_CONFIG_JS_PATH" && exit 0
-test ! -f "$NGINX_CONFIG_JS_PATH" && exit 0
+test ! -f "$NGINX_CONFIG_JS_PATH" && exit 1
 
 definedEnvs=$(printf '${%s} ' $(env | cut -d= -f1))
 if [ ! -w "$NGINX_CONFIG_JS_PATH" ]; then
