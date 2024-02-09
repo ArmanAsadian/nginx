@@ -1,7 +1,7 @@
 FROM ghcr.io/alwatr/nginx:2.4.1
 
 RUN apk add --no-cache curl
-HEALTHCHECK --interval=30s --timeout=3s --start-period=1s --retries=3 CMD curl -fso /dev/null http://localhost/server-info || exit 1
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --start-interval=1s --retries=3 CMD curl -fso /dev/null http://localhost/server-info || exit 1
 
 WORKDIR /data
 
