@@ -1,4 +1,4 @@
-FROM docker.io/library/nginx:1.25.3-alpine3.18-slim
+FROM docker.io/library/nginx:1.25.4-alpine3.18-slim
 
 RUN rm -rfv /docker-entrypoint* /etc/nginx/conf.d/* /etc/nginx/nginx.conf /var/www/html /usr/share/nginx/html /data
 COPY etc/nginx/ /etc/nginx/
