@@ -10,7 +10,7 @@ location ~* wp-includes/js/tinymce/langs/.*.php {
   deny all;
 }
 
-location ~* /(?:uploads|files|wp-content|wp-includes)/.*\.php\$ {
+location ~* /(?:uploads|files|wp-content|wp-includes)/.*\.php$ {
   deny all;
 }
 
@@ -18,7 +18,7 @@ location ~* /wp-content/uploads/nginx-helper/ {
   internal;
 }
 
-location ~* ^/(wp-content)/(.*?)\.(zip|gz|tar|bzip2|7z)\$ {
+location ~* ^/(wp-content)/(.*?)\.(zip|gz|tar|bzip2|7z)$ {
   deny all;
 }
 
